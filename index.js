@@ -43,13 +43,21 @@ async function run() {
     })
 
     // Get Single Toy
-    app.get('/singleToy/:id', async (req, res) => {
+    app.get('/toy/:id', async (req, res) => {
       const id = req.params.id;
-      console.log(id)
+      // console.log(id)
       const query = { _id: new ObjectId(id) }
       const user = await ToysCollection.findOne(query)
       res.send(user)
     })
+
+    // Get My Toys
+    app.get('/myToys/:email', async (req, res) => {
+      console.log(req.params.email)
+      const Toys = await ToysCollection.find({ SellerEmail: req.params.email }).toArray();
+      res.send(Toys)
+    })
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

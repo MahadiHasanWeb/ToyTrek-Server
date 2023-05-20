@@ -53,9 +53,33 @@ async function run() {
 
     // Get My Toys
     app.get('/myToys/:email', async (req, res) => {
-      console.log(req.params.email)
+      // console.log(req.params.email)
       const Toys = await ToysCollection.find({ SellerEmail: req.params.email }).toArray();
       res.send(Toys)
+    })
+
+
+    // Update Single Data
+    
+    app.put('/toy/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedToy = req.body;
+      console.log(updatedToy)
+      const filter = { _id: new ObjectId(id) }
+      const option = { upsert: true }
+      const ToyUpdated = {
+        $set: {
+          ToyName: updatedToy.ToyName,
+          quantity: updatedToy.quantity,
+          ToyPicture: updatedToy.ToyPicture,
+          details: updatedToy.details,
+          Price: updatedToy.Price,
+          rating: updatedToy.rating,
+          subCategory: updatedToy.subCategory
+        }
+      }
+      const result = await ToysCollection.updateOne(filter, ToyUpdated, option);
+      res.send(result);
     })
 
 
@@ -63,7 +87,7 @@ async function run() {
 
     app.delete('/toy/:id', async (req, res) => {
       const id = req.params.id;
-      // console.log(id)
+      console.log('Plz Delete kar do muje', id)
       const query = { _id: new ObjectId(id) }
       const user = await ToysCollection.deleteOne(query)
       res.send(user)

@@ -29,7 +29,7 @@ async function run() {
 
 
     // Next 3 line Comment For Vercel Deploy Problem
-    
+
     // const indexKeys = { ToyName: 1 };
     // const indexOptions = { name: "toyName" }
     // const CreateNewIndex = await ToysCollection.createIndex(indexKeys, indexOptions);
@@ -80,9 +80,7 @@ async function run() {
       res.send(result)
     })
 
-
     // Update Single Data
-
     app.put('/toy/:id', async (req, res) => {
       const id = req.params.id;
       const updatedToy = req.body;
@@ -104,9 +102,7 @@ async function run() {
       res.send(result);
     })
 
-
     // Delete Single Data
-
     app.delete('/toy/:id', async (req, res) => {
       const id = req.params.id;
       console.log('Plz Delete kar do muje', id)

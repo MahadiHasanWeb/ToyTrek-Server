@@ -24,8 +24,17 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const ToysCollection = client.db('ToyTrek').collection('Toys')
+
+
+    // Next 3 line Comment For Vercel Deploy Problem
+    
+    // const indexKeys = { ToyName: 1 };
+    // const indexOptions = { name: "toyName" }
+    // const CreateNewIndex = await ToysCollection.createIndex(indexKeys, indexOptions);
+
+
 
     app.post('/allToys', async (req, res) => {
       const AllToys = req.body;
@@ -58,9 +67,22 @@ async function run() {
       res.send(Toys)
     })
 
+    // Get Toy Name Search
+    app.get('/toySearch/:text', async (req, res) => {
+      const searchText = req.params.text;
+      // console.log(searchText)
+      const result = await ToysCollection.find({
+        $or: [
+          { ToyName: { $regex: searchText, $options: "i" } }
+        ]
+      })
+        .toArray();
+      res.send(result)
+    })
+
 
     // Update Single Data
-    
+
     app.put('/toy/:id', async (req, res) => {
       const id = req.params.id;
       const updatedToy = req.body;
@@ -94,7 +116,7 @@ async function run() {
     })
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
